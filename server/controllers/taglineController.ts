@@ -6,7 +6,7 @@ export const getTaglines = async (req: Request, res: Response): Promise<void> =>
     const data: ITagline[] = await Tagline.find({});
     res.status(200).send(data);
   } catch (error) {
-    res.status(500).send({error: error.message});
+    res.status(500).send({error: error as string});
   }
 }
 
@@ -17,6 +17,6 @@ export const postTagline = async (req: Request, res: Response): Promise<void> =>
     await data.save();
     res.status(201);
   } catch (error) {
-    res.status(500).send({error: error.message});
+    res.status(500).send({error: error as string});
   }
 }

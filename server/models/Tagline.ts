@@ -1,6 +1,6 @@
 import mongoose, { Schema, Document, Model } from 'mongoose' ;
 
-interface ITagline extends Document {
+export interface ITagline extends Document {
   tagline: string;
 }
 

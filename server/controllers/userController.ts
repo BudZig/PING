@@ -7,7 +7,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
     res.send(data);
     res.status(200); 
   } catch (error) {
-    res.status(500).send({error: error.message});
+    res.status(500).send({error: error as string});
   }
 }
 
@@ -17,7 +17,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
     res.send(data);
     res.status(200);
   } catch (error) {
-    res.status(500).send({error: error.message});
+    res.status(500).send({error: error as string});
   }
 };
 
@@ -28,7 +28,7 @@ export const createUser = async (req: Request, res: Response): Promise<void> => 
     res.send(data);
     res.status(201);
   } catch (error) {
-    res.status(500),send({error: error.message});
+    res.status(500).send({error: error as string});
   }
 }
 
@@ -44,7 +44,7 @@ export const updateUser = async (req: Request, res: Response): Promise<void> => 
     console.log(data);
     res.status(201);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({error: error as string});
   }
 };
 
@@ -68,7 +68,7 @@ export const sendRequest = async (req: Request, res: Response): Promise<void> =>
     res.send(data);
     res.status(201);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({error: error as string});
   }
 };
 
@@ -84,7 +84,7 @@ export const sendReview = async (req: Request, res: Response): Promise<void> => 
     res.send(data);
     res.status(201);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({error: error as string});
   }
 };
 
@@ -104,6 +104,6 @@ export const updateImages = async (req: Request, res: Response): Promise<void> =
     res.send(user);
     res.status(201);
   } catch (error) {
-    res.status(500).send({ error: error.message });
+    res.status(500).send({error: error as string});
   }
 };
