@@ -32,7 +32,7 @@ const RequestSchema: Schema<IRequest> = new Schema({
   date: Date,
 });
 
-interface IUser extends Document {
+export interface IUser extends Document {
   username: string;
   email: string;
   role: string;
