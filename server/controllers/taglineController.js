@@ -23,7 +23,7 @@ const getTaglines = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send({ error: error });
     }
 });
-exports.getTaglines = getTaglines;
+
 const postTagline = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         console.log(req.body.tagline);
@@ -35,4 +35,6 @@ const postTagline = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send({ error: error });
     }
 });
-exports.postTagline = postTagline;
+
+
+module.exports = { postTagline, getTaglines }

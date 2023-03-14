@@ -24,7 +24,7 @@ const getAllUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send({ error: error });
     }
 });
-exports.getAllUsers = getAllUsers;
+
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = yield User_1.default.findOne({ email: req.body.email.user.email });
@@ -35,7 +35,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(500).send({ error: error });
     }
 });
-exports.getUser = getUser;
+
 const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const data = new User_1.default(req.body);
@@ -47,7 +47,7 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send({ error: error });
     }
 });
-exports.createUser = createUser;
+
 const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { socketID, username, role } = req.body;
@@ -60,7 +60,7 @@ const updateUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send({ error: error });
     }
 });
-exports.updateUser = updateUser;
+
 const sendRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { username, content, type, status } = req.body;
@@ -81,7 +81,7 @@ const sendRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         res.status(500).send({ error: error });
     }
 });
-exports.sendRequest = sendRequest;
+
 const sendReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { _id, helper, rating, review, time } = req.body.request;
@@ -93,7 +93,7 @@ const sendReview = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         res.status(500).send({ error: error });
     }
 });
-exports.sendReview = sendReview;
+
 // this function has to be fixed, images get added to wrong documents
 const updateImages = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -110,4 +110,6 @@ const updateImages = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).send({ error: error });
     }
 });
-exports.updateImages = updateImages;
+
+
+module.exports = { getAllUsers, getUser, sendRequest, sendReview, createUser, updateUser, updateImages }
