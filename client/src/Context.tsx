@@ -4,14 +4,16 @@ import io from 'socket.io-client';
 import Peer from 'simple-peer';
 import { DateTime, Interval } from 'luxon';
 import { getUser, createUser, updateUser, sendRequest } from './lib/ApiService';
+import { CallType, ContextType, PeerNode, Props, Request, User } from './types';
 
-const Context = createContext();
 
-const socket = io(process.env.REACT_APP_SERVER_URL);
+const Context = createContext<ContextType>({});
 
-const ContextProvider = ({ children }) => {
+const socket = io(process.env.REACT_APP_SERVER_URL!);
+
+const ContextProvider = ({ children }: Props) => {
   const { isAuthenticated, user, loginWithRedirect, logout } = useAuth0();
-  const [currentUser, setCurrentUser] = useState({
+  const [currentUser, setCurrentUser] = useState<User>({
     username: '',
     email: '',
     role: 'Helpee',
@@ -21,8 +23,8 @@ const ContextProvider = ({ children }) => {
     registered: false,
   });
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [stream, setStream] = useState();
-  const [call, setCall] = useState({
+  const [stream, setStream] = useState<MediaStream | undefined>();
+  const [call, setCall] = useState<CallType>({
     accepted: false,
     ended: false,
     incoming: false,
@@ -30,9 +32,9 @@ const ContextProvider = ({ children }) => {
     name: '',
     signal: null,
   });
-  const [stroke, setStroke] = useState([]);
-  const [incomingStroke, setIncomingStroke] = useState([]);
-  const [request, setRequest] = useState({
+  const [stroke, setStroke] = useState<any[]>([]);
+  const [incomingStroke, setIncomingStroke] = useState<any[]>([]);
+  const [request, setRequest] = useState<Request>({
     _id: '',
     content: '',
     type: 'Plumbing',
@@ -47,8 +49,8 @@ const ContextProvider = ({ children }) => {
   const [recipient, setRecipient] = useState('');
   const [initialFetch, setInitialFetch] = useState(false);
 
-  const localVideo = useRef({});
-  const remoteVideo = useRef({});
+  const localVideo = useRef<HTMLVideoElement>(null);
+  const remoteVideo = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
     // Sets up the video stream
@@ -62,8 +64,8 @@ const ContextProvider = ({ children }) => {
     if (isAuthenticated && currentUser.registered === true) {
       socket.emit('userConnected', { name: currentUser.username });
       socket.on('users', (users) => {
-        const usersWithPendingRequests = users.filter((user) =>
-          user.requests.some((request) => request.status === 'Pending')
+        const usersWithPendingRequests = users.filter((user: { requests: any[]; }) =>
+          user.requests.some((request: { status: string; }) => request.status === 'Pending')
         );
         setOnlineUsers(usersWithPendingRequests);
       });
@@ -124,12 +126,12 @@ const ContextProvider = ({ children }) => {
   };
 
   // Creates user in database
-  const handleCreateUser = async (event) => {
+  const handleCreateUser = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
     const receivedUser = await createUser({
       username: currentUser.username,
-      email: user.email,
+      email: user?.email,
       role: currentUser.role,
     });
 
@@ -155,7 +157,7 @@ const ContextProvider = ({ children }) => {
   };
 
   // Send request to database and socket
-  const handleRequest = async (event) => {
+  const handleRequest = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
 
     const userResponse = await sendRequest({
@@ -178,15 +180,9 @@ const ContextProvider = ({ children }) => {
   };
 
   // Sets up the peer.js connection
-  const callUser = (id) => {
+  const callUser = (id: React.SetStateAction<string>) => {
     // stun/turn servers might be needed to avoid connection problems, needs investigating
     const peer = new Peer({
-      // config: {
-      //   iceServers: [
-      //     { url: 'stun:stun.l.google.com:19302' },
-      //     { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' },
-      //   ],
-      // },
       initiator: true,
       trickle: false,
       stream,
@@ -204,7 +200,7 @@ const ContextProvider = ({ children }) => {
     });
 
     peer.on('stream', (currentStream) => {
-      remoteVideo.current.srcObject = currentStream;
+      if (remoteVideo.current) remoteVideo.current.srcObject = currentStream;
     });
 
     socket.on('callAccepted', (signal) => {
@@ -224,12 +220,6 @@ const ContextProvider = ({ children }) => {
 
     // stun/turn servers might be needed to avoid connection problems, needs investigating
     const peer = new Peer({
-      // config: {
-      //   iceServers: [
-      //     { url: 'stun:stun.l.google.com:19302' },
-      //     { url: 'turn:homeo@turn.bistri.com:80', credential: 'homeo' },
-      //   ],
-      // },
       initiator: false,
       trickle: false,
       stream,
@@ -241,8 +231,10 @@ const ContextProvider = ({ children }) => {
 
     peer.on('stream', (currentStream) => {
       console.log(remoteVideo);
-
-      remoteVideo.current.srcObject = currentStream;
+      if (remoteVideo.current) {
+        const current = remoteVideo.current as PeerNode;
+        current.srcObject = currentStream;
+      }
     });
 
     peer.signal(call.signal);
@@ -258,7 +250,7 @@ const ContextProvider = ({ children }) => {
     setRequest({
       ...request,
       helper: call.name,
-      time: Interval.fromDateTimes(request.time, DateTime.now()).toDuration(),
+      time: request.time ? Interval.fromDateTimes(request.time as DateTime, DateTime.now()).toDuration() : null,
     });
 
     setCall({
@@ -295,7 +287,12 @@ const ContextProvider = ({ children }) => {
         handleGetUser,
         handleCreateUser,
         handleUpdateUser,
+
+        stroke,
+        socket,
         setStroke,
+        setCall,
+        setIncomingStroke,
         setRequest,
         handleRequest,
         setCurrentPage,

@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from 'react';
 import { getAllUsers } from '../lib/ApiService';
 import { Context } from '../Context';
 import { Typography, Rating, Box } from '@mui/material';
-import { Interval, DateTime, Duration } from 'luxon';
+import { Duration } from 'luxon';
 
 const Insights = () => {
   const { currentUser } = useContext(Context);
-  const [allRequests, setAllRequests] = useState([]);
+  const [allRequests, setAllRequests] = useState<any[]>([]);
 
-  const convertTime = (timeInMil) => {
+  const convertTime = (timeInMil: any) => {
     const time = new Date(timeInMil);
     return `${time.getMinutes()} Minutes, ${time.getSeconds()} Seconds`;
   };
@@ -22,7 +22,7 @@ const Insights = () => {
         for (const request of user.requests) {
           if (
             request.review &&
-            request.review.helper === currentUser.username
+            request.review.helper === currentUser?.username
           ) {
             requests.push({ helpee: user.username, request: request });
           }
@@ -60,7 +60,8 @@ const Insights = () => {
             precision={0.5}
           />
           <Typography variant="h6">Average call time</Typography>
-          <Typography variant="h8" sx={{ fontSize: 14 }}>
+
+          <Typography variant="h6" sx={{ fontSize: 14 }}>
             {convertTime(
               allRequests.reduce((acc, curr) => {
                 return (

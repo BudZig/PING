@@ -1,6 +1,5 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { Context } from '../Context';
-import { getTaglines } from '../lib/ApiService';
 import { MenuItem, Typography, CircularProgress } from '@mui/material';
 import {
   StyledTextField,
@@ -18,39 +17,27 @@ const Login = () => {
     handleCreateUser,
     initialFetch,
   } = useContext(Context);
-  const [taglines, setTaglines] = useState([]);
-
-  // useEffect(() => {
-
-  // Fill Taglines document in DB to get random taglines the frontpage
-  
-  //   const getTaglines = async () => {
-  //     const data = await getTaglines();
-  //     setTaglines(data);
-  //   }
-  //   getTaglines();
-  // }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
-      handleGetUser();
+      handleGetUser!();
     }
   }, [isAuthenticated]);
 
+  if (currentUser)
   return (
     <div className="center">
       {!isAuthenticated && (
         <div>
           <Typography variant="h4">
             <p>
-              {/* {taglines[Math.floor(Math.random() * taglines.length)]} */}
               You seem desperate.
               <br />
               We're here to <span className="orange">help</span>!
             </p>
           </Typography>
 
-          <StyledButton onClick={() => loginWithRedirect()} variant="contained">
+          <StyledButton onClick={() => loginWithRedirect!()} variant="contained">
             Login
           </StyledButton>
         </div>
@@ -71,7 +58,7 @@ const Login = () => {
               placeholder="Username"
               value={currentUser.username}
               onChange={(e) =>
-                setCurrentUser({ ...currentUser, username: e.target.value })
+                setCurrentUser!({ ...currentUser, username: e.target.value })
               }
             />
           </div>
@@ -82,9 +69,9 @@ const Login = () => {
             <StyledSelect
               className="form-control"
               id="role"
-              value={currentUser.role}
+              value={currentUser?.role}
               onChange={(e) =>
-                setCurrentUser({ ...currentUser, role: e.target.value })
+                setCurrentUser!({ ...currentUser, role: e.target.value as string})
               }
             >
               <MenuItem value="Helpee">Helpee</MenuItem>

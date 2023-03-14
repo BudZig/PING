@@ -1,8 +1,9 @@
 class ARButton {
-  static createButton(renderer, sessionInit = {}) {
+  static createButton(renderer: any, sessionInit: any = {}) {
     const button = document.createElement('button');
 
     function showStartAR(/*device*/) {
+      // @ts-ignore
       if (sessionInit.domOverlay === undefined) {
         const overlay = document.createElement('div');
         overlay.style.display = 'none';
@@ -12,8 +13,8 @@ class ARButton {
           'http://www.w3.org/2000/svg',
           'svg'
         );
-        svg.setAttribute('width', 38);
-        svg.setAttribute('height', 38);
+        svg.setAttribute('width', '38');
+        svg.setAttribute('height', '38');
         svg.style.position = 'absolute';
         svg.style.right = '20px';
         svg.style.top = '20px';
@@ -28,7 +29,7 @@ class ARButton {
         );
         path.setAttribute('d', 'M 12,12 L 28,28 M 28,12 12,28');
         path.setAttribute('stroke', '#fff');
-        path.setAttribute('stroke-width', 2);
+        path.setAttribute('stroke-width', '2');
         svg.appendChild(path);
 
         if (sessionInit.optionalFeatures === undefined) {
@@ -41,9 +42,9 @@ class ARButton {
 
       //
 
-      let currentSession = null;
+      let currentSession: any = null;
 
-      async function onSessionStarted(session) {
+      async function onSessionStarted(session: any) {
         session.addEventListener('end', onSessionEnded);
 
         renderer.xr.setReferenceSpaceType('local');
@@ -85,7 +86,7 @@ class ARButton {
 
       button.onclick = function () {
         if (currentSession === null) {
-          navigator.xr
+          navigator.xr!
             .requestSession('immersive-ar', sessionInit)
             .then(onSessionStarted);
         } else {
@@ -113,7 +114,7 @@ class ARButton {
       button.textContent = 'AR NOT SUPPORTED';
     }
 
-    function showARNotAllowed(exception) {
+    function showARNotAllowed(exception: any) {
       disableButton();
 
       console.warn(
@@ -124,7 +125,7 @@ class ARButton {
       button.textContent = 'AR NOT ALLOWED';
     }
 
-    function stylizeElement(element) {
+    function stylizeElement(element: any) {
       element.style.position = 'absolute';
       element.style.bottom = '20px';
       element.style.padding = '12px 6px';
@@ -145,7 +146,7 @@ class ARButton {
 
       stylizeElement(button);
 
-      navigator.xr
+      navigator.xr!
         .isSessionSupported('immersive-ar')
         .then(function (supported) {
           supported ? showStartAR() : showARNotSupported();

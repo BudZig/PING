@@ -8,21 +8,22 @@ const Nav = () => {
   const { logout, currentUser, setCurrentPage } = useContext(Context);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
+  const handleClick = (event: any) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = (event) => {
+  const handleClose = (event: any) => {
     if (event.target.getAttribute('data-key'))
-      setCurrentPage(event.target.getAttribute('data-key'));
+      setCurrentPage!(event.target.getAttribute('data-key'));
     setAnchorEl(null);
   };
 
   const handleLogout = () => {
-    logout({
+    logout!({
       logoutParams: { returnTo: window.location.origin },
     });
   };
 
+  if (currentUser)
   return (
     <div className="nav">
       <MenuIcon

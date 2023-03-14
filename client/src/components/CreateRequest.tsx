@@ -25,7 +25,7 @@ const CreateRequest = () => {
           multiline
           variant="outlined"
           value={request.content}
-          onChange={(e) => setRequest({ ...request, content: e.target.value })}
+          onChange={(e) => setRequest!({ ...request, content: e.target.value })}
         />
         <br />
         <br />
@@ -34,7 +34,7 @@ const CreateRequest = () => {
           required
           id="type"
           value={request.type}
-          onChange={(e) => setRequest({ ...request, type: e.target.value })}
+          onChange={(e) => setRequest!({ ...request, type: e.target.value })}
         >
           <MenuItem value="Plumbing">Plumbing</MenuItem>
           <MenuItem value="Furniture Assembly">Furniture Assembly</MenuItem>

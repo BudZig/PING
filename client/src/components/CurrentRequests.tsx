@@ -21,6 +21,7 @@ import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 const CurrentRequests = () => {
   const { onlineUsers, callUser, currentUser } = useContext(Context);
 
+  if (onlineUsers && currentUser)
   return (
     <Box className="center">
       <Typography variant="h4">
@@ -71,7 +72,7 @@ const CurrentRequests = () => {
                   <StyledButton
                     variant="contained"
                     color="primary"
-                    onClick={() => callUser(user.socketID)}
+                    onClick={() => callUser!(user.socketID)}
                   >
                     Call
                   </StyledButton>

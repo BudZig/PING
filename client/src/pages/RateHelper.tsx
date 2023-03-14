@@ -21,7 +21,8 @@ const labels = {
   5: 'Excellent+',
 };
 
-function getLabelText(value) {
+function getLabelText(value: any) {
+  // @ts-ignore
   return `${value} Star${value !== 1 ? 's' : ''}, ${labels[value]}`;
 }
 
@@ -29,13 +30,13 @@ const RateHelper = () => {
   const { request, setRequest } = useContext(Context);
   const [hover, setHover] = useState(-1);
 
-  const handleSendReview = async (e) => {
+  const handleSendReview = async (e: any) => {
     e.preventDefault();
     const response = await sendReview({
       request,
     });
     if (response) {
-      setRequest({
+      setRequest!({
         _id: '',
         content: '',
         type: 'Plumbing',
@@ -64,7 +65,7 @@ const RateHelper = () => {
           multiline
           variant="outlined"
           value={request.review}
-          onChange={(e) => setRequest({ ...request, review: e.target.value })}
+          onChange={(e) => setRequest!({ ...request, review: e.target.value })}
         />
         <br />
         <br />
@@ -73,7 +74,8 @@ const RateHelper = () => {
           value={request.rating}
           precision={0.5}
           getLabelText={getLabelText}
-          onChange={(e) => setRequest({ ...request, rating: e.target.value })}
+          // @ts-ignore
+          onChange={(e) => setRequest!({ ...request, rating: e.target.value })}
           onChangeActive={(event, newHover) => {
             setHover(newHover);
           }}
@@ -82,6 +84,7 @@ const RateHelper = () => {
         <div style={{ height: '3rem' }}>
           {request.rating !== null && (
             <Box sx={{ ml: 2 }}>
+              {/*@ts-ignore*/}
               {labels[hover !== -1 ? hover : request.rating]}
             </Box>
           )}

@@ -16,6 +16,7 @@ const style = {
   height: '50vh',
 };
 
+//@ts-ignore
 const ImageStack = ({ screenshots }) => {
   const { currentUser } = useContext(Context);
   const [open, setOpen] = useState(false);
@@ -23,9 +24,11 @@ const ImageStack = ({ screenshots }) => {
   const handleClose = () => setOpen(false);
 
   const handleImageDownload = async () => {
-    const zip = await createZip(screenshots, currentUser.username);
-    const zipBlob = new Blob([zip], { type: 'application/zip' });
-    saveAs(zipBlob, 'screenshots.zip');
+    if (currentUser) {
+      const zip = await createZip(screenshots, currentUser.username);
+      const zipBlob = new Blob([zip], { type: 'application/zip' });
+      saveAs(zipBlob, 'screenshots.zip');
+    }
   };
 
   return (
@@ -35,7 +38,7 @@ const ImageStack = ({ screenshots }) => {
       // onClick={handleImageDownload}
     >
       <br />
-      {screenshots.slice(-3).map((url, index) => (
+      {screenshots.slice(-3).map((url: string, index: number) => (
         <img
           key={index}
           src={url}
@@ -48,7 +51,7 @@ const ImageStack = ({ screenshots }) => {
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Carousel>
-            {screenshots.map((url, i) => (
+            {screenshots.map((url: string, i: number) => (
               <Image key={i} url={url} />
             ))}
           </Carousel>
@@ -58,7 +61,7 @@ const ImageStack = ({ screenshots }) => {
   );
 };
 
-function Image(props) {
+function Image(props: any) {
   return (
     <>
       <DownloadForOfflineIcon
