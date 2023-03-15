@@ -1,3 +1,5 @@
+import { DateInput, DateTime, Duration } from "luxon";
+
 export interface User {
   username: string;
   email: string;
@@ -11,7 +13,7 @@ export interface User {
 export interface CallType {
   accepted: boolean;
   ended: boolean;
-  isReceivingCall: boolean;
+  incoming: boolean;
   userToCall?: string;
   from: string;
   name: string;
@@ -21,9 +23,15 @@ export interface CallType {
 export type Socket = any;
 
 export type Request = {
+  _id: string,
   content: string;
   type: string;
-  status: string;
+  status: string | null;
+  sent: boolean,
+  helper: string,
+  rating: number,
+  review: string,
+  time: DateTime | Duration | DateInput | null
 };
 
 export type Review = {
@@ -37,38 +45,42 @@ export interface Props {
   children: React.ReactNode;
 }
 
+export interface PeerNode {
+  srcObject: MediaStream;
+}
+
 export interface ContextType {
-  currentUser: User;
-  setCurrentUser: React.Dispatch<React.SetStateAction<User>>;
-  onlineUsers: User[];
+  currentUser?: User;
+  setCurrentUser?: React.Dispatch<React.SetStateAction<User>>;
+  onlineUsers?: User[];
   stream?: MediaStream;
-  call: CallType;
-  setCall: React.Dispatch<React.SetStateAction<CallType>>;
-  currentPage: string;
-  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
-  stroke: any[];
-  setStroke: React.Dispatch<React.SetStateAction<any[]>>;
-  incomingStroke: any[];
-  setIncomingStroke: React.Dispatch<React.SetStateAction<any[]>>;
-  request: any;
-  setRequest: React.Dispatch<React.SetStateAction<any>>;
-  localVideo: React.MutableRefObject<HTMLVideoElement | null>;
-  remoteVideo: React.MutableRefObject<HTMLVideoElement | null>;
-  peerRef: React.MutableRefObject<any | null>;
-  socket: Socket;
-  callUser: (userToCall: string) => void;
-  answerCall: () => void;
-  leaveCall: () => void;
-  sendStroke: (stroke: any) => void;
-  sendRequest: (request: any) => void;
-  isAuthenticated: boolean;
-  loginWithRedirect: () => void;
-  logout: (logoutParams: any) => void;
-  user: any;
-  handleGetUser: (email: string) => void;
-  handleCreateUser: (email: string, username: string, role: string) => void;
-  handleUpdateUser: (email: string, username: string, role: string) => void;
-  handleRequest: (request: any) => void;
-  setStream: React.Dispatch<React.SetStateAction<MediaStream | undefined>>;
+  call?: CallType;
+  setCall?: React.Dispatch<React.SetStateAction<CallType>>;
+  currentPage?: string;
+  setCurrentPage?: React.Dispatch<React.SetStateAction<string>>;
+  stroke?: any[];
+  setStroke?: React.Dispatch<React.SetStateAction<any[]>>;
+  incomingStroke?: any;
+  setIncomingStroke?: React.Dispatch<React.SetStateAction<any[]>>;
+  request?: any;
+  initialFetch?: boolean;
+  setRequest?: React.Dispatch<React.SetStateAction<any>>;
+  localVideo?: React.MutableRefObject<HTMLVideoElement | null >;
+  remoteVideo?: React.MutableRefObject<HTMLVideoElement | null>;
+  socket?: Socket;
+  callUser?: (userToCall: string) => void;
+  answerCall?: () => void;
+  leaveCall?: () => void;
+  isAuthenticated?: boolean;
+  loginWithRedirect?: () => void;
+  logout?: (logoutParams: any) => void;
+  user?: any;
+  handleGetUser?: () => void;
+  handleCreateUser?: (event: {
+    preventDefault: () => void;
+}) => void;
+  handleUpdateUser?: () => void;
+  handleRequest?: (request: any) => void;
+  setStream?: React.Dispatch<React.SetStateAction<MediaStream | undefined>>;
 }
 

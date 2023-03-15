@@ -2,7 +2,7 @@ import axios from 'axios';
 import { imageToDB } from './ApiService';
 import JSZip from 'jszip';
 
-export const uploadImageToCloudinary = async (dataUrl, username) => {
+export const uploadImageToCloudinary = async (dataUrl: string, username: string) => {
   const formData = new FormData();
   const blob = await (await fetch(dataUrl)).blob();
   formData.append('file', blob);
@@ -19,6 +19,7 @@ export const uploadImageToCloudinary = async (dataUrl, username) => {
   };
 
   try {
+    // @ts-ignore
     const response = await axios.post(process.env.REACT_APP_CLOUDINARY_URL, formData, {
       headers,
       params: data,
@@ -30,7 +31,7 @@ export const uploadImageToCloudinary = async (dataUrl, username) => {
   }
 };
 
-export const createZip = async (files, username) => {
+export const createZip = async (files: any[], username: string) => {
   const downloadedFiles = await Promise.all(
     files.map(async (file, index) => {
       const response = await fetch(file);
@@ -41,6 +42,7 @@ export const createZip = async (files, username) => {
 
   const zip = new JSZip();
   const folder = zip.folder(username);
+  if (folder)
   downloadedFiles.forEach((file) => {
     folder.file(file.name, file.blob);
   });

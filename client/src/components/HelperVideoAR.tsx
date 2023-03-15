@@ -1,20 +1,25 @@
 import React, { useContext, useEffect, useRef } from 'react';
 import { Context } from '../Context';
+// @ts-ignore
 import { Atrament } from 'atrament';
 
 const VideoChat = () => {
   const { call, localVideo, remoteVideo, leaveCall, setStroke, stream } =
     useContext(Context);
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   let videoWidth = window.innerWidth;
   let videoHeight = window.innerHeight;
 
   useEffect(() => {
-    localVideo.current.srcObject = stream;
-    const canvas = canvasRef.current;
-    canvas.width = videoWidth;
-    canvas.height = videoHeight;
+    if (localVideo?.current) {
+      localVideo.current.srcObject = stream as MediaStream;
+      const canvas = canvasRef.current;
+      if (canvas) {
+        canvas.width = videoWidth;
+        canvas.height = videoHeight;
+      }
+    }
 
     const sketchpad = new Atrament(canvasRef.current, {
       color: 'orange',
@@ -22,12 +27,15 @@ const VideoChat = () => {
 
     sketchpad.recordStrokes = true;
     sketchpad.smoothing = 1.3;
+    // @ts-ignore
     sketchpad.addEventListener('strokerecorded', ({ stroke }) =>
-      setStroke(stroke)
+      setStroke!(stroke)
     );
   }, [call]);
 
+  if (call)
   return (
+    // @ts-ignore
     <div className="video-container" style={{ videoWidth }}>
       {call.accepted && !call.ended && (
         <button className="button end-call" onClick={leaveCall}>

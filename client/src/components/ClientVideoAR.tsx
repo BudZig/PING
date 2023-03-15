@@ -1,10 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../Context';
-import ImageStack from './ui/ImageStack';
 import { Typography } from '@mui/material';
 import { StyledButton } from './ui/StyledComponents';
 import { uploadImageToCloudinary } from '../lib/ImageApi';
-import AR from './AR';
 
 const VideoChat = () => {
   const {
@@ -14,19 +12,18 @@ const VideoChat = () => {
     localVideo,
     call,
     leaveCall,
-    setStream,
     stream,
   } = useContext(Context);
-  const [screenshots, setScreenshots] = useState([]);
+  const [screenshots, setScreenshots] = useState<any[]>([]);
 
-  const canvasRef = useRef(null);
+  const canvasRef = useRef<HTMLCanvasElement | undefined>(null);
 
   let videoWidth = window.innerWidth;
   let videoHeight = window.innerHeight;
 
   useEffect(() => {
-    if (call.accepted) {
-      localVideo.current.srcObject = stream;
+    if (call?.accepted && localVideo?.current) {
+      localVideo.current.srcObject = stream as MediaStream;
       console.log({ localVideo });
       console.log({ remoteVideo });
     }
@@ -34,20 +31,22 @@ const VideoChat = () => {
 
   const handleScreenshot = async () => {
     const canvas = canvasRef.current;
-    const video = remoteVideo.current;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+    const video = remoteVideo?.current;
+    const ctx = canvas?.getContext('2d');
+    ctx?.drawImage(video as CanvasImageSource, 0, 0, videoWidth, videoHeight);
 
-    const dataUrl = canvas.toDataURL({ format: 'png' });
-    canvas.remove();
+    // .toDataUrl() param was originally { format: 'png' }
+    const dataUrl = canvas?.toDataURL('png');
+    canvas?.remove();
 
     const screenshotUrl = await uploadImageToCloudinary(
       dataUrl,
-      currentUser.username
+      currentUser?.username
     );
     setScreenshots((prevUrls) => [...prevUrls, screenshotUrl]);
   };
 
+  if (call)
   return (
     <div className="video-container">
       <div className="center">

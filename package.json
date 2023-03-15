@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "@mui/types": "^7.2.3",
+    "@types/three": "^0.149.0"
+  },
+  "devDependencies": {
+    "@types/file-saver": "^2.0.5"
+  }
+}

@@ -10,7 +10,7 @@ export const getAllUsers = async () => {
   }
 };
 
-export const getUser = async (email) => {
+export const getUser = async (email: any) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/getUser`,
@@ -29,7 +29,7 @@ export const getUser = async (email) => {
   }
 };
 
-export const createUser = async (newUser) => {
+export const createUser = async (newUser: any) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/createUser`,
@@ -48,7 +48,7 @@ export const createUser = async (newUser) => {
   }
 };
 
-export const updateUser = async (updatedUser) => {
+export const updateUser = async (updatedUser: any) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/updateUser`,
@@ -67,7 +67,7 @@ export const updateUser = async (updatedUser) => {
   }
 };
 
-export const sendRequest = async (request) => {
+export const sendRequest = async (request: any) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/sendRequest`,
@@ -86,7 +86,7 @@ export const sendRequest = async (request) => {
   }
 };
 
-export const sendReview = async (request) => {
+export const sendReview = async (request: any) => {
   try {
     const response = await fetch(
       `${process.env.REACT_APP_SERVER_URL}/sendReview`,
@@ -105,7 +105,7 @@ export const sendReview = async (request) => {
   }
 };
 
-export const imageToDB = async (image, username) => {
+export const imageToDB = async (image: any, username: string) => {
   try {
     await fetch(`${process.env.REACT_APP_SERVER_URL}/updateImages`, {
       method: 'POST',

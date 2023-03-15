@@ -8,13 +8,13 @@ class ARButton{
 
 	constructor( renderer, options ) {
         this.renderer = renderer;
-        
+
         if (options !== undefined){
             this.onSessionStart = options.onSessionStart;
             this.onSessionEnd = options.onSessionEnd;
             this.sessionInit = options.sessionInit;
         }
-        
+
         if ( 'xr' in navigator ) {
 
 			const button = document.createElement( 'button' );
@@ -26,7 +26,7 @@ class ARButton{
 				supported ? this.showStartAR( button ) : this.showARNotSupported( button );
 
 			} );
-            
+
             document.body.appendChild( button );
 
 		} else {
@@ -36,7 +36,7 @@ class ARButton{
 			if ( window.isSecureContext === false ) {
 
 				message.href = document.location.href.replace( /^http:/, 'https:' );
-				message.innerHTML = 'WEBXR NEEDS HTTPS'; 
+				message.innerHTML = 'WEBXR NEEDS HTTPS';
 
 			} else {
 
@@ -52,7 +52,7 @@ class ARButton{
 			this.stylizeElement( message, false );
             message.style.bottom = '0px';
             message.style.opacity = '1';
-            
+
             document.body.appendChild ( message );
 
 		}
@@ -63,9 +63,9 @@ class ARButton{
 
         let currentSession = null;
         const self = this;
-        
+
         this.stylizeElement( button, true, 30, true );
-        
+
         function onSessionStarted( session ) {
 
             session.addEventListener( 'end', onSessionEnded );
@@ -73,11 +73,11 @@ class ARButton{
             self.renderer.xr.setReferenceSpaceType( 'local' );
             self.renderer.xr.setSession( session );
             self.stylizeElement( button, false, 12, true );
-            
+
             button.textContent = 'STOP AR';
 
             currentSession = session;
-            
+
             if (self.onSessionStart !== undefined && self.onSessionStart !== null) self.onSessionStart();
 
         }
@@ -90,7 +90,7 @@ class ARButton{
             button.textContent = 'START AR';
 
             currentSession = null;
-            
+
             if (self.onSessionEnd !== undefined && self.onSessionEnd !== null) self.onSessionEnd();
 
         }
@@ -102,19 +102,19 @@ class ARButton{
         button.style.width = '80px';
         button.style.cursor = 'pointer';
         button.innerHTML = '<i class="fas fa-camera"></i>';
-        
+
 
         button.onmouseenter = function () {
-            
-            button.style.fontSize = '12px'; 
+
+            button.style.fontSize = '12px';
             button.textContent = (currentSession===null) ? 'START AR' : 'STOP AR';
             button.style.opacity = '1.0';
 
         };
 
         button.onmouseleave = function () {
-            
-            button.style.fontSize = '30px'; 
+
+            button.style.fontSize = '30px';
             button.innerHTML = '<i class="fas fa-camera"></i>';
             button.style.opacity = '0.5';
 
@@ -130,7 +130,7 @@ class ARButton{
                 // requestReferenceSpace call will fail if it turns out to be unavailable.
                 // ('local' is always available for immersive sessions and doesn't need to
                 // be requested separately.)
-                
+
                 navigator.xr.requestSession( 'immersive-ar', self.sessionInit ).then( onSessionStarted );
 
             } else {
@@ -147,7 +147,7 @@ class ARButton{
 
         button.style.cursor = 'auto';
         button.style.opacity = '0.5';
-        
+
         button.onmouseenter = null;
         button.onmouseleave = null;
 
@@ -157,7 +157,7 @@ class ARButton{
 
     showARNotSupported( button ) {
         this.stylizeElement( button, false );
-        
+
         this.disableButton(button);
 
         button.style.display = '';
@@ -188,7 +188,7 @@ class ARButton{
 
     }
 
-		
+
 
 };
 

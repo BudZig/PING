@@ -5,7 +5,7 @@ import App from './App';
 import { Auth0Provider } from '@auth0/auth0-react';
 import { ContextProvider } from './Context';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <Auth0Provider
     domain="dev-j52czrd4pzfgrhio.eu.auth0.com"

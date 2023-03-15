@@ -17,18 +17,19 @@ import PowerIcon from '@mui/icons-material/Power';
 import ComputerIcon from '@mui/icons-material/Computer';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import ImageStack from '../components/ui/ImageStack';
-const { DateTime, Duration } = require('luxon');
+const { DateTime } = require('luxon');
 
 
 const PastRequests = () => {
-  const [expandedItem, setExpandedItem] = useState(null);
+  const [expandedItem, setExpandedItem] = useState<any>(null);
 
   const { currentUser, handleGetUser } = useContext(Context);
 
   useEffect(() => {
-    handleGetUser();
+    handleGetUser!();
   }, []);
 
+  if (currentUser)
   return (
     <Box className="center">
       <Typography variant="h4" sx={{ mt: '1.5rem' }}>
@@ -66,27 +67,18 @@ const PastRequests = () => {
                     sx={{ color: '#8793a2', mr: '1rem' }}
                   >
                     <b>Date</b> <br />
+                    {/*@ts-ignore*/}
                     {DateTime.fromISO(request.date).toFormat('dd.MM')}
                   </Typography>
 
-                  {/* 
-                  Needs fixing:
-                  {request.review.time && (
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ color: '#8793a2', mr: '1rem' }}
-                    >
-                      <b>Length</b> <br />
-                      {Duration.fromISO(request.review.time).toFormat('mm:ss')}
-                    </Typography>
-                  )} */}
                   <Typography
                     variant="subtitle2"
                     sx={{ color: '#8793a2', mr: '1rem' }}
-                  >
+                    >
                     <b>Category</b> <br /> {request.type}
                   </Typography>
                   <Box sx={{ width: '10vw' }}>
+                    {/*@ts-ignore*/}
                     <ImageStack screenshots={request.images} />
                   </Box>
                 </ListItem>
@@ -95,15 +87,6 @@ const PastRequests = () => {
           );
         })}{' '}
       </List>
-      {/* 
-      // either use this modal or the one in ImageStack for image gallery
-      {selectedRequest && (
-        <RequestDetailsModal
-          request={selectedRequest}
-          isOpen={Boolean(selectedRequest)}
-          handleClose={handleCloseRequestDetails}
-        />
-      )} */}
     </Box>
   );
 };

@@ -1,11 +1,9 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Context } from '../Context';
 import ImageStack from './ui/ImageStack';
-import { Atrament } from 'atrament';
 import { Typography } from '@mui/material';
 import { StyledButton } from './ui/StyledComponents';
 import { uploadImageToCloudinary } from '../lib/ImageApi';
-import mergeImages from 'merge-images';
 import AR from './AR';
 
 const ClientVIdeo = () => {
@@ -16,20 +14,18 @@ const ClientVIdeo = () => {
     remoteVideo,
     call,
     leaveCall,
-    incomingStroke,
     stream,
-    setStream,
   } = useContext(Context);
-  const [screenshots, setScreenshots] = useState([]);
+  const [screenshots, setScreenshots] = useState<any[]>([]);
 
-  const canvasRef = useRef({});
+  const canvasRef = useRef<HTMLCanvasElement | undefined>(undefined);
 
   let videoWidth = window.innerWidth;
   let videoHeight = window.innerHeight;
 
   useEffect(() => {
-    if (call.accepted) {
-      localVideo.current.srcObject = stream;
+    if (call && call.accepted) {
+    if (localVideo && localVideo.current) localVideo.current.srcObject = stream as MediaProvider;
       console.log({ localVideo });
       console.log({ remoteVideo });
     }
@@ -38,52 +34,33 @@ const ClientVIdeo = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    canvas.width = videoWidth;
-    canvas.height = videoHeight;
-
-    // this draws 2D sketches instead of 3D in the AR component
-
-    //   const sketchpad = new Atrament(canvasRef.current, {
-    //     color: 'orange',
-    //   });
-    //   sketchpad.smoothing = 1.3;
-    //   sketchpadRef.current = sketchpad;
-
-    //   if (incomingStroke.points) {
-    //     const points = incomingStroke.points.slice();
-    //     const firstPoint = points.shift().point;
-    //     sketchpad.beginStroke(firstPoint.x, firstPoint.y);
-    //     let prevPoint = firstPoint;
-    //     while (points.length > 0) {
-    //       const point = points.shift().point;
-    //       const { x, y } = sketchpad.draw(
-    //         point.x,
-    //         point.y,
-    //         prevPoint.x,
-    //         prevPoint.y
-    //       );
-    //       prevPoint = { x, y };
-    //     }
-    //     sketchpad.endStroke(prevPoint.x, prevPoint.y);
-    //   }
+    if (canvas) {
+      canvas.width = videoWidth;
+      canvas.height = videoHeight;
+    }
   }, []);
 
   const handleScreenshot = async () => {
     const canvas = canvasRef.current;
-    const video = remoteVideo.current;
-    const ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+    const video = remoteVideo?.current;
+    const ctx = canvas?.getContext('2d');
 
-    const dataUrl = canvas.toDataURL({ format: 'png' });
-    canvas.remove();
+    if (ctx && video && canvas) {
 
-    const screenshotUrl = await uploadImageToCloudinary(
-      dataUrl,
-      currentUser.username
-    );
-    setScreenshots((prevUrls) => [...prevUrls, screenshotUrl]);
+      ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+      // toDataUrl param was originally { format: 'png' }
+      const dataUrl = canvas.toDataURL('png');
+      canvas.remove();
+
+      const screenshotUrl = await uploadImageToCloudinary(
+        dataUrl,
+        currentUser!.username
+        );
+        setScreenshots((prevUrls) => [...prevUrls, screenshotUrl]);
+      }
   };
 
+  if (call)
   return (
     <div>
       <div className="center">
@@ -112,7 +89,7 @@ const ClientVIdeo = () => {
           </>
         )}
       </div>
-      {/* <canvas ref={canvasRef} className="sketchpad" /> */}
+
       {call.accepted && !call.ended && (
         <div className="video-container">
           {screenshots.length > 0 && <ImageStack screenshots={screenshots} />}
@@ -131,7 +108,7 @@ const ClientVIdeo = () => {
             ref={remoteVideo}
             autoPlay
           />
-
+          {/* @ts-ignore */}
           <AR ref={canvasRef} />
           <video
             className="big-video"

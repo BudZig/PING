@@ -7,14 +7,15 @@ import {
   StyledButton,
 } from '../components/ui/StyledComponents';
 
+
 const Account = () => {
   const { currentUser, setCurrentUser, handleUpdateUser } = useContext(Context);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    handleUpdateUser();
+    handleUpdateUser && handleUpdateUser();
   };
-
+  if (setCurrentUser && currentUser)
   return (
     <div className="center">
       <Typography variant="h4">Account Settings</Typography>
@@ -24,14 +25,14 @@ const Account = () => {
           label="Username"
           className="input"
           variant="outlined"
-          value={currentUser.username}
+          value={currentUser?.username}
           onChange={(e) =>
             setCurrentUser({ ...currentUser, username: e.target.value })
           }
         />
         <br />
         <br />
-        <Typography variant="h7" sx={{ color: '#8793a2', fontSize: 13 }}>
+        <Typography variant="h6" sx={{ color: '#8793a2', fontSize: 13 }}>
           Role{' '}
         </Typography>
         <br />
@@ -41,7 +42,7 @@ const Account = () => {
           value={currentUser.role}
           sx={{ mt: '0.3rem' }}
           onChange={(e) =>
-            setCurrentUser({ ...currentUser, role: e.target.value })
+            setCurrentUser({ ...currentUser, role: e.target.value as string })
           }
         >
           <MenuItem value="Helpee">Helpee</MenuItem>

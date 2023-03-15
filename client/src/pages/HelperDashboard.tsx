@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import { Context } from '../Context';
 import HelperVideo from '../components/HelperVideo';
-import HelperVideoAR from '../components/HelperVideoAR';
 import CurrentRequests from '../components/CurrentRequests';
 import Insights from './Insights';
 import Account from './Account';
@@ -11,9 +10,12 @@ const HelperDashboard = () => {
 
   return (
     <div>
-      {currentPage === 'Request' && !call.incoming && <CurrentRequests />}
-      {currentPage === 'Request' && call.incoming && <HelperVideo />}
+        {/*@ts-ignore*/}
+      {currentPage === 'Request' && !call?.incoming && <CurrentRequests />}
+        {/*@ts-ignore*/}
+      {currentPage === 'Request' && call?.incoming && <HelperVideo />}
       {currentPage === 'Insights' && <Insights />}
+        {/*@ts-ignore*/}
       {currentPage === 'Account' && <Account />}
     </div>
   );
