@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import Tagline, { ITagline } from '../models/Tagline';
 
-const getTaglines = async (req: Request, res: Response): Promise<void> => {
+export const getTaglines = async (req: Request, res: Response): Promise<void> => {
   try {
     const data: ITagline[] = await Tagline.find({});
     res.status(200).send(data);
@@ -10,7 +10,7 @@ const getTaglines = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-const postTagline = async (req: Request, res: Response): Promise<void> => {
+export const postTagline = async (req: Request, res: Response): Promise<void> => {
   try {
     console.log(req.body.tagline);
     const data: ITagline = new Tagline(req.body);
@@ -21,4 +21,4 @@ const postTagline = async (req: Request, res: Response): Promise<void> => {
   }
 }
 
-module.exports = { postTagline, getTaglines }
+
