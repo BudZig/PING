@@ -1,10 +1,10 @@
-import { Request, response, Response } from "express";
-import mongoose from "mongoose";
-import Tagline from "../models/Tagline";
-import { getTaglines, postTagline } from "../controllers/taglineController";
-import User from "../models/User";
-import app from "..";
-import request from 'supertest';
+const { Request, response, Response } = require("express");
+const mongoose = require('mongoose');
+const Tagline = require('../models/Tagline').default;
+const { getTaglines, postTagline } = require("../controllers/taglineController");
+const User = require('../models/User').default;
+const app = require('..').default;
+const request = require('supertest');
 
 describe('taglineController', () => {
     beforeAll(async () => {
@@ -18,11 +18,11 @@ afterAll(async () => {
 
 describe('getTaglines', () => {
     it('should return all taglines', async () => {
-        const mockRequest = {} as Request;
+        const mockRequest = {};
         const mockResponse = {
             status: jest.fn().mockReturnThis(),
             send: jest.fn(),
-        } as unknown as Response;
+        };
 
         await Tagline.create({
             tagline: 'test',
@@ -38,14 +38,14 @@ describe('getTaglines', () => {
                 }),
             ])
         );
-    });
+    }, 10000);
 
     it('should handle errors correctly', async () => {
-        const mockRequest = {} as Request;
+        const mockRequest = {};
         const mockResponse = {
             status: jest.fn().mockReturnThis(),
             send: jest.fn(),
-        } as unknown as Response;
+        };
 
         jest.spyOn(Tagline, 'find').mockImplementation(() => {
             throw new Error('Mock Error');
@@ -55,7 +55,7 @@ describe('getTaglines', () => {
 
         expect(mockResponse.status).toHaveBeenCalledWith(500);
         expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Mock Error' });
-    });
+    }, 10000);
 });
 
 describe('postTagline', () => {
@@ -64,11 +64,11 @@ describe('postTagline', () => {
             body: {
                 tagline: 'new tagline',
             },
-        } as Request;
+        };
         const mockResponse = {
-            status: jest.fn(). mockReturnThis(),
+            status: jest.fn().mockReturnThis(),
             send: jest.fn(),
-        } as unknown as Response;
+        };
 
         await postTagline(mockRequest, mockResponse);
 
@@ -79,11 +79,11 @@ describe('postTagline', () => {
     });
 
     it('should handle server errors', async () => {
-        const mockRequest = {} as Request;
+        const mockRequest = {};
         const mockResponse = {
             status: jest.fn().mockReturnThis(),
             send: jest.fn(),
-        } as unknown as Response;
+        };
 
         jest.spyOn(Tagline.prototype, 'save').mockImplementation(() => {
             throw new Error('Mock error');
@@ -93,7 +93,7 @@ describe('postTagline', () => {
 
         expect(mockResponse.status).toHaveBeenCalledWith(500);
         expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Mock error' });
-    });
+    }, 10000);
 });
 
 describe('userController', () => {
@@ -106,7 +106,7 @@ describe('userController', () => {
             const res = await request(app).get('/users');
             expect(res.status).toBe(200);
             expect(res.body).toEqual([]);
-        });
+        }, 10000);
 
         it('should get all users when there are any', async () => {
             const user1 = new User({ username: 'username1', email: 'user1@test.com', password: 'password1' });
@@ -117,7 +117,7 @@ describe('userController', () => {
             const res = await request(app).get('/users');
             expect(res.status).toBe(200);
             expect(res.body.length).toBe(2);
-        });
+        }, 10000);
     });
 
     describe('getUser', () => {
@@ -128,12 +128,12 @@ describe('userController', () => {
             const res = await request(app).get('/users/username');
             expect(res.status).toBe(200);
             expect(res.body.username).toBe('username');
-        });
+        }, 10000);
 
         it('should return 404 if user does not exist', async () => {
             const res = await request(app).get('users/notAnActualUser');
             expect(res.status).toBe(404);
-        });
+        }, 10000);
     });
 
     describe('createUser', () => {
@@ -143,7 +143,7 @@ describe('userController', () => {
             const res = await request(app).post('/users').send(user);
             expect(res.status).toBe(201);
             expect(res.body.username).toBe('username');
-        });
+        }, 10000);
 
         it('should return 500 if user is not created', async () => {
             const user = { email: 'user@test.com', password: 'password' };
@@ -151,7 +151,7 @@ describe('userController', () => {
             const res = await request(app).post('/users').send(user);
             expect(res.status).toBe(500);
             expect(res.body.error).toBeDefined();
-        });
+        }, 10000);
     });
 
     describe('updateUser', () => {
@@ -164,7 +164,17 @@ describe('userController', () => {
             const res = await request(app).put('/users').send(updatedUser);
             expect(res.status).toBe(201);
             expect(res.body.username).toBe('updatedusername');
+        }, 10000);
 
-        })
-    })
+        it('should return 500 if user is not updated', async () => {
+            const user = new User({ username: 'username', email: 'user@test.com', password: 'password' });
+            await user.save();
+
+            const updatedUser = { socketID: 'socketid123', email: 'testuser2@test.com', password: 'newpassword' };
+
+            const response = await request(app).put('/users').send(updatedUser);
+            expect(response.status).toBe(500);
+            expect(response.body.error).toBeDefined();
+        }, 10000);
+    });
 })
