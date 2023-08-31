@@ -1,15 +1,14 @@
-import express, { Application, Request, Response } from 'express';
+import express, { Application } from 'express';
 import router from './router';
 import cors from 'cors';
 import http from 'http';
-import socketio, { Server as SocketServer } from 'socket.io';
-// import { ExpressPeerServer } from 'peer';
+import { Server as SocketServer } from "socket.io";
 import User from './models/User';
 
 const app: Application = express();
 const port: number = 5000;
 const server: http.Server = http.createServer(app);
-const io: SocketServer = socketio(server, {
+const io: SocketServer = new SocketServer(server, {
   allowEIO3: true,
   cors: {
     origin: '*',
@@ -17,15 +16,10 @@ const io: SocketServer = socketio(server, {
   },
 });
 
-// const peerServer = ExpressPeerServer(server, {
-//   debug: true,
-//   path: '/ping',
-// });
-
 app.use(cors());
 app.use(express.json());
 app.use(router);
-// app.use('peerjs', peerServer);
+
 
 io.on('connection', (socket) => {
   console.log(`👽 User ${socket.id} connected 👽`);
@@ -54,7 +48,6 @@ io.on('connection', (socket) => {
     
     let users = await User.find({ online: true });
     io.emit('users', users);
-    //socket.broadcast.emit('callEnded');
   });
 
   socket.on('callUser', ({ userToCall, signalData, from, name }) => {

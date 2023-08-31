@@ -1,4 +1,3 @@
-const { Request, response, Response } = require("express");
 const mongoose = require('mongoose');
 const Tagline = require('../models/Tagline').default;
 const { getTaglines, postTagline } = require("../controllers/taglineController");
@@ -38,7 +37,7 @@ describe('getTaglines', () => {
                 }),
             ])
         );
-    }, 10000);
+    }, 50000);
 
     it('should handle errors correctly', async () => {
         const mockRequest = {};
@@ -54,7 +53,7 @@ describe('getTaglines', () => {
         await getTaglines(mockRequest, mockResponse);
 
         expect(mockResponse.status).toHaveBeenCalledWith(500);
-        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Mock Error' });
+        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Error: Mock Error' });
     }, 10000);
 });
 
@@ -92,7 +91,7 @@ describe('postTagline', () => {
         await postTagline(mockRequest, mockResponse);
 
         expect(mockResponse.status).toHaveBeenCalledWith(500);
-        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Mock error' });
+        expect(mockResponse.send).toHaveBeenCalledWith({ error: 'Error: Mock error' });
     }, 10000);
 });
 

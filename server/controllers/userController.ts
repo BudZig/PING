@@ -107,3 +107,4 @@ export const updateImages = async (req: Request, res: Response): Promise<void> =
     res.status(500).send({error: error as string});
   }
 };
+
